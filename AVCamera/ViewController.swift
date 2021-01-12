@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     private let cellId = "UITableViewCellId"
     
-    private let features: [CameraFeatures] = [.photoOutput]
+    private let features: [CameraFeatures] = [.photoOutput, .bracketed]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +37,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let feature = self.features[indexPath.row]
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "CameraViewController") as! CameraViewController
+        vc.modalPresentationStyle = .fullScreen
         switch feature {
         case .photoOutput:
-            let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "CameraViewController")
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true, completion: nil)
+            break
+        case .bracketed:
+            vc.bracketedEnable = true
         }
+        self.present(vc, animated: true, completion: nil)
     }
     
     
@@ -50,6 +53,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 enum CameraFeatures: String {
     case photoOutput = "AVCapturePhotoOutput 生命周期"
+    case bracketed = "分级捕获"
     
 }
 

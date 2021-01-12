@@ -15,6 +15,8 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var cameraBtn: UIButton!
     @IBOutlet weak var photoBtn: UIButton!
     
+    var bracketedEnable = false
+    
     private let session = AVCaptureSession()
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue")
@@ -194,7 +196,8 @@ class CameraViewController: UIViewController {
     @IBAction func capturePhoto(_ sender: UIButton) {
         let videoPreviewLayerOrientation = preview.videoPreviewLayer.connection?.videoOrientation
         
-        self.sessionQueue.async {
+        self.sessionQueue.async { [weak self] in
+            guard let `self` = self else { return }
             if let photoOutputConnection = self.photoOutput.connection(with: .video) {
                 photoOutputConnection.videoOrientation = videoPreviewLayerOrientation!
             }
@@ -203,6 +206,13 @@ class CameraViewController: UIViewController {
             // Capture HEIF photos when supported. Enable auto-flash and high-resolution photos.
             if  self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
                 photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
+            }
+            
+            if self.bracketedEnable {
+                let bracketedStillImageSettings = [AVCaptureAutoExposureBracketedStillImageSettings.autoExposureSettings(exposureTargetBias: -1),
+                                                   AVCaptureAutoExposureBracketedStillImageSettings.autoExposureSettings(exposureTargetBias: 0),
+                                                   AVCaptureAutoExposureBracketedStillImageSettings.autoExposureSettings(exposureTargetBias: 1)]
+                photoSettings = AVCapturePhotoBracketSettings.init(rawPixelFormatType: 0, processedFormat: nil, bracketedSettings: bracketedStillImageSettings)
             }
             
 //            if self.videoDeviceInput.device.isFlashAvailable {

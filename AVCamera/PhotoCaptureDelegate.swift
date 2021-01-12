@@ -21,7 +21,7 @@ class PhotoCaptureProcessor: NSObject {
     
     private let photoProcessingHandler: (Bool) -> Void
     
-    private var photoData: Data?
+    private var photoDatas = [Data]()
     
     private var livePhotoCompanionMovieURL: URL?
     
@@ -142,7 +142,9 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
         if let error = error {
             print("Error capturing photo: \(error)")
         } else {
-            photoData = photo.fileDataRepresentation()
+            if let photoData = photo.fileDataRepresentation() {
+                self.photoDatas.append(photoData)
+            }
         }
         // A portrait effects matte gets generated only if AVFoundation detects a face.
         if var portraitEffectsMatte = photo.portraitEffectsMatte {
@@ -212,27 +214,34 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             return
         }
         
-        guard let photoData = photoData else {
-            print("No photo data resource")
-            didFinish()
-            return
-        }
+//        guard let photoData = photoDatas[0] else {
+//            print("No photo data resource")
+//            didFinish()
+//            return
+//        }
+        //let photoData = photoDatas[2]
         debugPrint(#function)
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
                 PHPhotoLibrary.shared().performChanges({
-                    let options = PHAssetResourceCreationOptions()
-                    let creationRequest = PHAssetCreationRequest.forAsset()
-                    options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue }
-                    creationRequest.addResource(with: .photo, data: photoData, options: options)
-                    
-                    if let livePhotoCompanionMovieURL = self.livePhotoCompanionMovieURL {
-                        let livePhotoCompanionMovieFileOptions = PHAssetResourceCreationOptions()
-                        livePhotoCompanionMovieFileOptions.shouldMoveFile = true
-                        creationRequest.addResource(with: .pairedVideo,
-                                                    fileURL: livePhotoCompanionMovieURL,
-                                                    options: livePhotoCompanionMovieFileOptions)
+                    var index = 0
+                    for photoData in self.photoDatas {
+                        let options = PHAssetResourceCreationOptions()
+                        let creationRequest = PHAssetCreationRequest.forAsset()
+                        options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue + "\(index)" }
+                        creationRequest.addResource(with: .photo, data: photoData, options: nil)
+                        index+=1
                     }
+                    
+//                    let creationRequest = PHAssetCreationRequest.forAsset()
+//
+//                    if let livePhotoCompanionMovieURL = self.livePhotoCompanionMovieURL {
+//                        let livePhotoCompanionMovieFileOptions = PHAssetResourceCreationOptions()
+//                        livePhotoCompanionMovieFileOptions.shouldMoveFile = true
+//                        creationRequest.addResource(with: .pairedVideo,
+//                                                    fileURL: livePhotoCompanionMovieURL,
+//                                                    options: livePhotoCompanionMovieFileOptions)
+//                    }
                     
                     // Save Portrait Effects Matte to Photos Library only if it was generated
                     if let portraitEffectsMatteData = self.portraitEffectsMatteData {
@@ -253,11 +262,12 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
                     if let error = error {
                         print("Error occurred while saving photo to photo library: \(error)")
                     }
-                    
+                    self.photoDatas.removeAll()
                     self.didFinish()
                 }
                 )
             } else {
+                self.photoDatas.removeAll()
                 self.didFinish()
             }
         }
