@@ -20,6 +20,12 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+    <key>NSCameraUsageDescription</key>
+    <string>AVCamera uses the camera to take photos and video.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>AVCamera uses the microphone to record sound during Live Photos and movies.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>AVCamera saves captured photos and videos to your photo library.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
