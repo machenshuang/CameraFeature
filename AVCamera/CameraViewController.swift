@@ -16,6 +16,7 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var photoBtn: UIButton!
     
     var bracketedEnable = false
+    var livePhotoEnable = false
     
     private let session = AVCaptureSession()
     private var isSessionRunning = false
@@ -111,10 +112,12 @@ class CameraViewController: UIViewController {
             self.session.addOutput(self.photoOutput)
             
             self.photoOutput.isHighResolutionCaptureEnabled = true
-            //self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported
+            if self.livePhotoEnable {
+                self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported
+            }
             //self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported
             //self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
-            self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
+            ///self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
             
             //self.photoOutput.maxPhotoQualityPrioritization = .quality
 //            livePhotoMode = photoOutput.isLivePhotoCaptureSupported ? .on : .off
@@ -215,20 +218,20 @@ class CameraViewController: UIViewController {
                 photoSettings = AVCapturePhotoBracketSettings.init(rawPixelFormatType: 0, processedFormat: nil, bracketedSettings: bracketedStillImageSettings)
             }
             
-//            if self.videoDeviceInput.device.isFlashAvailable {
-//                photoSettings.flashMode = .auto
-//            }
-//
-//            photoSettings.isHighResolutionPhotoEnabled = true
+            if self.videoDeviceInput.device.isFlashAvailable {
+                photoSettings.flashMode = .auto
+            }
+
+            photoSettings.isHighResolutionPhotoEnabled = true
 //            if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
 //                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
 //            }
 //            // Live Photo capture is not supported in movie mode.
-//            if self.livePhotoMode == .on && self.photoOutput.isLivePhotoCaptureSupported {
-//                let livePhotoMovieFileName = NSUUID().uuidString
-//                let livePhotoMovieFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((livePhotoMovieFileName as NSString).appendingPathExtension("mov")!)
-//                photoSettings.livePhotoMovieFileURL = URL(fileURLWithPath: livePhotoMovieFilePath)
-//            }
+            if self.livePhotoEnable && self.photoOutput.isLivePhotoCaptureSupported {
+                let livePhotoMovieFileName = NSUUID().uuidString
+                let livePhotoMovieFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((livePhotoMovieFileName as NSString).appendingPathExtension("mov")!)
+                photoSettings.livePhotoMovieFileURL = URL(fileURLWithPath: livePhotoMovieFilePath)
+            }
 //
 //            photoSettings.isDepthDataDeliveryEnabled = (self.depthDataDeliveryMode == .on
 //                && self.photoOutput.isDepthDataDeliveryEnabled)

@@ -223,25 +223,26 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
         debugPrint(#function)
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
+                
                 PHPhotoLibrary.shared().performChanges({
+                    var request: PHAssetCreationRequest!
                     var index = 0
                     for photoData in self.photoDatas {
                         let options = PHAssetResourceCreationOptions()
                         let creationRequest = PHAssetCreationRequest.forAsset()
                         options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue + "\(index)" }
                         creationRequest.addResource(with: .photo, data: photoData, options: nil)
+                        request = creationRequest
                         index+=1
                     }
-                    
-//                    let creationRequest = PHAssetCreationRequest.forAsset()
-//
-//                    if let livePhotoCompanionMovieURL = self.livePhotoCompanionMovieURL {
-//                        let livePhotoCompanionMovieFileOptions = PHAssetResourceCreationOptions()
-//                        livePhotoCompanionMovieFileOptions.shouldMoveFile = true
-//                        creationRequest.addResource(with: .pairedVideo,
-//                                                    fileURL: livePhotoCompanionMovieURL,
-//                                                    options: livePhotoCompanionMovieFileOptions)
-//                    }
+                
+                    if let livePhotoCompanionMovieURL = self.livePhotoCompanionMovieURL {
+                        let livePhotoCompanionMovieFileOptions = PHAssetResourceCreationOptions()
+                        livePhotoCompanionMovieFileOptions.shouldMoveFile = true
+                        request.addResource(with: .pairedVideo,
+                                                    fileURL: livePhotoCompanionMovieURL,
+                                                    options: livePhotoCompanionMovieFileOptions)
+                    }
                     
                     // Save Portrait Effects Matte to Photos Library only if it was generated
                     if let portraitEffectsMatteData = self.portraitEffectsMatteData {
