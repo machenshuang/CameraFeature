@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42569A9A25AD43EA001F0544 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42569A9925AD43EA001F0544 /* CameraViewController.swift */; };
+		42569A9E25AD45E7001F0544 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42569A9C25AD45E7001F0544 /* PreviewView.swift */; };
+		42569A9F25AD45E7001F0544 /* PhotoCaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42569A9D25AD45E7001F0544 /* PhotoCaptureDelegate.swift */; };
 		428CEEC025AADC1E0045CAAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CEEBF25AADC1E0045CAAE /* AppDelegate.swift */; };
 		428CEEC225AADC1E0045CAAE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CEEC125AADC1E0045CAAE /* SceneDelegate.swift */; };
 		428CEEC425AADC1E0045CAAE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428CEEC325AADC1E0045CAAE /* ViewController.swift */; };
@@ -16,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		42569A9925AD43EA001F0544 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		42569A9C25AD45E7001F0544 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		42569A9D25AD45E7001F0544 /* PhotoCaptureDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDelegate.swift; sourceTree = "<group>"; };
 		428CEEBC25AADC1E0045CAAE /* AVCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		428CEEBF25AADC1E0045CAAE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		428CEEC125AADC1E0045CAAE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -56,6 +62,8 @@
 		428CEEBE25AADC1E0045CAAE /* AVCamera */ = {
 			isa = PBXGroup;
 			children = (
+				42569A9D25AD45E7001F0544 /* PhotoCaptureDelegate.swift */,
+				42569A9C25AD45E7001F0544 /* PreviewView.swift */,
 				428CEEBF25AADC1E0045CAAE /* AppDelegate.swift */,
 				428CEEC125AADC1E0045CAAE /* SceneDelegate.swift */,
 				428CEEC325AADC1E0045CAAE /* ViewController.swift */,
@@ -63,6 +71,7 @@
 				428CEEC825AADC1F0045CAAE /* Assets.xcassets */,
 				428CEECA25AADC1F0045CAAE /* LaunchScreen.storyboard */,
 				428CEECD25AADC1F0045CAAE /* Info.plist */,
+				42569A9925AD43EA001F0544 /* CameraViewController.swift */,
 			);
 			path = AVCamera;
 			sourceTree = "<group>";
@@ -137,7 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42569A9F25AD45E7001F0544 /* PhotoCaptureDelegate.swift in Sources */,
+				42569A9E25AD45E7001F0544 /* PreviewView.swift in Sources */,
 				428CEEC425AADC1E0045CAAE /* ViewController.swift in Sources */,
+				42569A9A25AD43EA001F0544 /* CameraViewController.swift in Sources */,
 				428CEEC025AADC1E0045CAAE /* AppDelegate.swift in Sources */,
 				428CEEC225AADC1E0045CAAE /* SceneDelegate.swift in Sources */,
 			);

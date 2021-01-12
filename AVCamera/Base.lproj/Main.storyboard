@@ -1,24 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="AVCamera" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dvG-K0-lag">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="dvG-K0-lag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8pc-md-D09"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dvG-K0-lag" secondAttribute="bottom" id="Qc1-ic-J7I"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dvG-K0-lag" secondAttribute="trailing" id="T4V-oV-fxT"/>
+                            <constraint firstItem="dvG-K0-lag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="oqJ-ke-NOJ"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="dvG-K0-lag" id="sYG-7A-s4e"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="139" y="131"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="UHb-br-stL">
+            <objects>
+                <viewController id="ee9-05-SGp" customClass="CameraViewController" customModule="AVCamera" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xBq-As-8De">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Za-RG-HBE" customClass="PreviewView" customModule="AVCamera" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hI-Ga-mN6" userLabel="Camera">
+                                <rect key="frame" x="324" y="802" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="11V-bl-Rfb"/>
+                                    <constraint firstAttribute="width" constant="60" id="I3O-nd-AUe"/>
+                                </constraints>
+                                <state key="normal" image="FlipCamera">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmv-US-Gfl" userLabel="Photo">
+                                <rect key="frame" x="177" y="802" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="52s-C4-ifB"/>
+                                    <constraint firstAttribute="width" constant="60" id="TQq-ez-P0l"/>
+                                </constraints>
+                                <state key="normal" image="CapturePhoto">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="61T-gm-DA4"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="rmv-US-Gfl" firstAttribute="bottom" secondItem="61T-gm-DA4" secondAttribute="bottom" id="4zh-XE-53u"/>
+                            <constraint firstItem="7Za-RG-HBE" firstAttribute="top" secondItem="xBq-As-8De" secondAttribute="top" id="93q-tH-B6G"/>
+                            <constraint firstItem="rmv-US-Gfl" firstAttribute="bottom" secondItem="6hI-Ga-mN6" secondAttribute="bottom" id="GQh-Sh-Q1W"/>
+                            <constraint firstAttribute="trailing" secondItem="7Za-RG-HBE" secondAttribute="trailing" id="HNd-Uj-Ufa"/>
+                            <constraint firstItem="rmv-US-Gfl" firstAttribute="centerX" secondItem="61T-gm-DA4" secondAttribute="centerX" id="PdS-tl-3Zo"/>
+                            <constraint firstItem="7Za-RG-HBE" firstAttribute="leading" secondItem="xBq-As-8De" secondAttribute="leading" id="XWe-yq-lqU"/>
+                            <constraint firstItem="61T-gm-DA4" firstAttribute="trailing" secondItem="6hI-Ga-mN6" secondAttribute="trailing" constant="30" id="aLX-xO-T7f"/>
+                            <constraint firstItem="rmv-US-Gfl" firstAttribute="centerY" secondItem="6hI-Ga-mN6" secondAttribute="centerY" id="hSj-o6-GU5"/>
+                            <constraint firstAttribute="bottom" secondItem="7Za-RG-HBE" secondAttribute="bottom" id="kY0-7K-jm9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraBtn" destination="6hI-Ga-mN6" id="Jxh-dH-5lU"/>
+                        <outlet property="photoBtn" destination="rmv-US-Gfl" id="NRh-zl-ZWM"/>
+                        <outlet property="preview" destination="7Za-RG-HBE" id="gKt-gn-REv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ekH-AA-Sas" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1286" y="131"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="CapturePhoto" width="150" height="150"/>
+        <image name="FlipCamera" width="150" height="150"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
