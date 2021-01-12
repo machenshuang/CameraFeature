@@ -70,6 +70,8 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             livePhotoCaptureHandler(true)
         }
         maxPhotoProcessingTime = resolvedSettings.photoProcessingTimeRange.start + resolvedSettings.photoProcessingTimeRange.duration
+        
+        debugPrint(#function)
     }
     
     /// - Tag: WillCapturePhoto
@@ -85,6 +87,8 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
         if maxPhotoProcessingTime > oneSecond {
             photoProcessingHandler(true)
         }
+        
+        debugPrint(#function)
     }
     
     func handleMatteData(_ photo: AVCapturePhoto, ssmType: AVSemanticSegmentationMatte.MatteType) {
@@ -134,7 +138,7 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
     /// - Tag: DidFinishProcessingPhoto
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         photoProcessingHandler(false)
-        
+        debugPrint(#function)
         if let error = error {
             print("Error capturing photo: \(error)")
         } else {
@@ -187,6 +191,7 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
     /// - Tag: DidFinishRecordingLive
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishRecordingLivePhotoMovieForEventualFileAt outputFileURL: URL, resolvedSettings: AVCaptureResolvedPhotoSettings) {
         livePhotoCaptureHandler(false)
+        debugPrint(#function)
     }
     
     /// - Tag: DidFinishProcessingLive
@@ -196,6 +201,7 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             return
         }
         livePhotoCompanionMovieURL = outputFileURL
+        debugPrint(#function)
     }
     
     /// - Tag: DidFinishCapture
@@ -211,7 +217,7 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             didFinish()
             return
         }
-        
+        debugPrint(#function)
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
                 PHPhotoLibrary.shared().performChanges({
