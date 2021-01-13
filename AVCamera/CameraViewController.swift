@@ -18,12 +18,14 @@ class CameraViewController: UIViewController {
     var bracketedEnable = false
     var livePhotoEnable = false
     var thumbnailEnable = false
+    var sceneMonitoring = false
+
     
     private let session = AVCaptureSession()
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue")
     private var setupResult: SessionSetupResult = .success
-    private let photoOutput = AVCapturePhotoOutput()
+    @objc dynamic private let photoOutput = AVCapturePhotoOutput()
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     
     private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
@@ -36,6 +38,8 @@ class CameraViewController: UIViewController {
     private let depthVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualWideCamera,
                                                                                                   .builtInDualCamera,
                                                                                                   .builtInTrueDepthCamera], mediaType: .video, position: .unspecified)
+    
+    private var keyValueObservations = [NSKeyValueObservation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +71,16 @@ class CameraViewController: UIViewController {
         self.spinner = UIActivityIndicatorView(style: .large)
         self.spinner.color = UIColor.yellow
         self.preview.addSubview(self.spinner)
+        
+    }
+    
+    deinit {
+        if self.sceneMonitoring {
+            for keyValueObservation in self.keyValueObservations {
+                keyValueObservation.invalidate()
+            }
+            self.keyValueObservations.removeAll()
+        }
     }
     
     private func configureSession() {
@@ -116,6 +130,18 @@ class CameraViewController: UIViewController {
             if self.livePhotoEnable {
                 self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported
             }
+            
+            if self.sceneMonitoring {
+                let photoSettings = AVCapturePhotoSettings()
+                photoSettings.flashMode = .on
+                self.photoOutput.photoSettingsForSceneMonitoring = photoSettings
+                let flashKeyValueObservation = self.photoOutput.observe(\.isFlashScene, options: .new) { (_, change) in
+                    guard let open = change.newValue else { return }
+                    debugPrint("闪光灯的推荐状态：\(open ? "打开" : "关闭")")
+                }
+                self.keyValueObservations.append(flashKeyValueObservation)
+            }
+            
             //self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported
             //self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
             ///self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
@@ -218,10 +244,6 @@ class CameraViewController: UIViewController {
                                                    AVCaptureAutoExposureBracketedStillImageSettings.autoExposureSettings(exposureTargetBias: 1)]
                 photoSettings = AVCapturePhotoBracketSettings.init(rawPixelFormatType: 0, processedFormat: nil, bracketedSettings: bracketedStillImageSettings)
             }
-            
-            if self.videoDeviceInput.device.isFlashAvailable {
-                photoSettings.flashMode = .auto
-            }
 
             photoSettings.isHighResolutionPhotoEnabled = true
             if self.thumbnailEnable && !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
@@ -233,6 +255,7 @@ class CameraViewController: UIViewController {
                 let livePhotoMovieFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((livePhotoMovieFileName as NSString).appendingPathExtension("mov")!)
                 photoSettings.livePhotoMovieFileURL = URL(fileURLWithPath: livePhotoMovieFilePath)
             }
+            
 //
 //            photoSettings.isDepthDataDeliveryEnabled = (self.depthDataDeliveryMode == .on
 //                && self.photoOutput.isDepthDataDeliveryEnabled)
@@ -334,10 +357,6 @@ class CameraViewController: UIViewController {
             }
         }
     }
-    
-    
-    
-    
     
     private func getCaptureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = self.videoDeviceDiscoverySession.devices
