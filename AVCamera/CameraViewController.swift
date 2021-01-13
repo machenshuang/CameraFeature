@@ -19,6 +19,7 @@ class CameraViewController: UIViewController {
     var livePhotoEnable = false
     var thumbnailEnable = false
     var sceneMonitoring = false
+    var isDepthEnable = false
 
     
     private let session = AVCaptureSession()
@@ -93,7 +94,12 @@ class CameraViewController: UIViewController {
         
         // Add video input.
         do {
-            let defaultVideoDevice = self.getCaptureDevice(with: .back)
+            var defaultVideoDevice: AVCaptureDevice?
+            if self.isDepthEnable {
+                defaultVideoDevice = self.getDepthCaptureDevice(with: .back)
+            } else {
+                defaultVideoDevice = self.getCaptureDevice(with: .back)
+            }
             guard let videoDevice = defaultVideoDevice else {
                 print("Default video device is unavailable.")
                 self.setupResult = .configurationFailed
@@ -142,7 +148,7 @@ class CameraViewController: UIViewController {
                 self.keyValueObservations.append(flashKeyValueObservation)
             }
             
-            //self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported
+            self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
             //self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
             ///self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
             
@@ -256,9 +262,9 @@ class CameraViewController: UIViewController {
                 photoSettings.livePhotoMovieFileURL = URL(fileURLWithPath: livePhotoMovieFilePath)
             }
             
-//
-//            photoSettings.isDepthDataDeliveryEnabled = (self.depthDataDeliveryMode == .on
-//                && self.photoOutput.isDepthDataDeliveryEnabled)
+
+            photoSettings.isDepthDataDeliveryEnabled = (self.isDepthEnable
+                && self.photoOutput.isDepthDataDeliveryEnabled)
 //
 //            photoSettings.isPortraitEffectsMatteDeliveryEnabled = (self.portraitEffectsMatteDeliveryMode == .on
 //                && self.photoOutput.isPortraitEffectsMatteDeliveryEnabled)
@@ -323,7 +329,13 @@ class CameraViewController: UIViewController {
                 print("Unknown capture position. Defaulting to back, dual-camera.")
                 preferredPosition = .back
             }
-            let devices = self.videoDeviceDiscoverySession.devices
+            
+            var devices: [AVCaptureDevice]
+            if self.isDepthEnable {
+                devices = self.depthVideoDeviceDiscoverySession.devices
+            } else {
+                devices = self.videoDeviceDiscoverySession.devices
+            }
             if let videoDevice = devices.first(where: { $0.position == preferredPosition }) {
                 do {
                     let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
@@ -338,8 +350,8 @@ class CameraViewController: UIViewController {
                         self.session.addInput(self.videoDeviceInput)
                     }
                 
-//                    self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported
-//                    self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported
+                    self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported && self.livePhotoEnable
+                    self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
 //                    self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
 //                    self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
 //                    self.selectedSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
@@ -361,6 +373,11 @@ class CameraViewController: UIViewController {
     private func getCaptureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = self.videoDeviceDiscoverySession.devices
         return devices.first { $0.position == position }
+    }
+    
+    private func getDepthCaptureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        let devices = self.depthVideoDeviceDiscoverySession.devices
+        return devices.first { $0.position == position}
     }
 
 }
