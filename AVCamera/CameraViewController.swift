@@ -17,6 +17,7 @@ class CameraViewController: UIViewController {
     
     var bracketedEnable = false
     var livePhotoEnable = false
+    var thumbnailEnable = false
     
     private let session = AVCaptureSession()
     private var isSessionRunning = false
@@ -223,10 +224,10 @@ class CameraViewController: UIViewController {
             }
 
             photoSettings.isHighResolutionPhotoEnabled = true
-//            if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
-//                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
-//            }
-//            // Live Photo capture is not supported in movie mode.
+            if self.thumbnailEnable && !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
+                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
+            }
+            // Live Photo capture is not supported in movie mode.
             if self.livePhotoEnable && self.photoOutput.isLivePhotoCaptureSupported {
                 let livePhotoMovieFileName = NSUUID().uuidString
                 let livePhotoMovieFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((livePhotoMovieFileName as NSString).appendingPathExtension("mov")!)

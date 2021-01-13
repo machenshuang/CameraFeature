@@ -145,6 +145,10 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             if let photoData = photo.fileDataRepresentation() {
                 self.photoDatas.append(photoData)
             }
+            
+            if let pixelbuffer = photo.previewPixelBuffer {
+                debugPrint("thumbnail info: \(pixelbuffer)")
+            }
         }
         // A portrait effects matte gets generated only if AVFoundation detects a face.
         if var portraitEffectsMatte = photo.portraitEffectsMatte {
@@ -214,12 +218,6 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
             return
         }
         
-//        guard let photoData = photoDatas[0] else {
-//            print("No photo data resource")
-//            didFinish()
-//            return
-//        }
-        //let photoData = photoDatas[2]
         debugPrint(#function)
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
