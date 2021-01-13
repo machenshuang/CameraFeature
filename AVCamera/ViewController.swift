@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     private let cellId = "UITableViewCellId"
     
-    private let features: [CameraFeatures] = [.photoOutput, .bracketed, .livePhoto, .thumbnail, .sceneMonitoring, .depth]
+    private let features: [CameraFeatures] = [.photoOutput, .bracketed, .livePhoto, .thumbnail, .sceneMonitoring, .depth, .portrait]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +52,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             vc.sceneMonitoring = true
         case .depth:
             vc.isDepthEnable = true
+        case .portrait:
+            vc.isDepthEnable = true
+            vc.isPortraitEnable = true
         }
         self.present(vc, animated: true, completion: nil)
     }
@@ -66,5 +69,7 @@ enum CameraFeatures: String {
     case thumbnail = "缩略图"
     case sceneMonitoring = "Flash场景监控"
     case depth = "景深模式"
+    case portrait = "人像模式"
+    
 }
 

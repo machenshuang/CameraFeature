@@ -20,6 +20,7 @@ class CameraViewController: UIViewController {
     var thumbnailEnable = false
     var sceneMonitoring = false
     var isDepthEnable = false
+    var isPortraitEnable = false
 
     
     private let session = AVCaptureSession()
@@ -149,7 +150,10 @@ class CameraViewController: UIViewController {
             }
             
             self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
-            //self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
+            if self.isDepthEnable && self.photoOutput.isDepthDataDeliverySupported {
+                self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported && self.isPortraitEnable
+            }
+            
             ///self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
             
             //self.photoOutput.maxPhotoQualityPrioritization = .quality
@@ -265,9 +269,7 @@ class CameraViewController: UIViewController {
 
             photoSettings.isDepthDataDeliveryEnabled = (self.isDepthEnable
                 && self.photoOutput.isDepthDataDeliveryEnabled)
-//
-//            photoSettings.isPortraitEffectsMatteDeliveryEnabled = (self.portraitEffectsMatteDeliveryMode == .on
-//                && self.photoOutput.isPortraitEffectsMatteDeliveryEnabled)
+            photoSettings.isPortraitEffectsMatteDeliveryEnabled = (self.isPortraitEnable && self.photoOutput.isPortraitEffectsMatteDeliveryEnabled)
 //
 //            if photoSettings.isDepthDataDeliveryEnabled {
 //                if !self.photoOutput.availableSemanticSegmentationMatteTypes.isEmpty {
@@ -352,10 +354,9 @@ class CameraViewController: UIViewController {
                 
                     self.photoOutput.isLivePhotoCaptureEnabled = self.photoOutput.isLivePhotoCaptureSupported && self.livePhotoEnable
                     self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
-//                    self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported
-//                    self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
-//                    self.selectedSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
-//                    self.photoOutput.maxPhotoQualityPrioritization = .quality
+                    if self.isDepthEnable && self.photoOutput.isDepthDataDeliverySupported {
+                        self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported && self.isPortraitEnable
+                    }
                     
                     self.session.commitConfiguration()
                 } catch {
