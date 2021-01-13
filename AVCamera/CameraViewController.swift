@@ -21,6 +21,7 @@ class CameraViewController: UIViewController {
     var sceneMonitoring = false
     var isDepthEnable = false
     var isPortraitEnable = false
+    var isPortraitSegmentEnable = false
 
     
     private let session = AVCaptureSession()
@@ -152,15 +153,12 @@ class CameraViewController: UIViewController {
             self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
             if self.isDepthEnable && self.photoOutput.isDepthDataDeliverySupported {
                 self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported && self.isPortraitEnable
+                if self.isPortraitSegmentEnable {
+                    self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
+                }
             }
             
-            ///self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
-            
-            //self.photoOutput.maxPhotoQualityPrioritization = .quality
-//            livePhotoMode = photoOutput.isLivePhotoCaptureSupported ? .on : .off
-//            depthDataDeliveryMode = photoOutput.isDepthDataDeliverySupported ? .on : .off
-//            portraitEffectsMatteDeliveryMode = photoOutput.isPortraitEffectsMatteDeliverySupported ? .on : .off
-//            photoQualityPrioritizationMode = .balanced
+            self.photoOutput.maxPhotoQualityPrioritization = .quality
             
             DispatchQueue.main.async {
                 [self.cameraBtn, self.photoBtn].forEach {
@@ -270,14 +268,13 @@ class CameraViewController: UIViewController {
             photoSettings.isDepthDataDeliveryEnabled = (self.isDepthEnable
                 && self.photoOutput.isDepthDataDeliveryEnabled)
             photoSettings.isPortraitEffectsMatteDeliveryEnabled = (self.isPortraitEnable && self.photoOutput.isPortraitEffectsMatteDeliveryEnabled)
-//
-//            if photoSettings.isDepthDataDeliveryEnabled {
-//                if !self.photoOutput.availableSemanticSegmentationMatteTypes.isEmpty {
-//                    photoSettings.enabledSemanticSegmentationMatteTypes = self.selectedSemanticSegmentationMatteTypes
-//                }
-//            }
-//
-//            photoSettings.photoQualityPrioritization = self.photoQualityPrioritizationMode
+
+            if photoSettings.isDepthDataDeliveryEnabled {
+                if !self.photoOutput.availableSemanticSegmentationMatteTypes.isEmpty {
+                    photoSettings.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
+                }
+            }
+            photoSettings.photoQualityPrioritization = .quality
             
             let photoCaptureProcessor = PhotoCaptureProcessor(with: photoSettings) {
                 DispatchQueue.main.async {
@@ -356,6 +353,9 @@ class CameraViewController: UIViewController {
                     self.photoOutput.isDepthDataDeliveryEnabled = self.photoOutput.isDepthDataDeliverySupported && self.isDepthEnable
                     if self.isDepthEnable && self.photoOutput.isDepthDataDeliverySupported {
                         self.photoOutput.isPortraitEffectsMatteDeliveryEnabled = self.photoOutput.isPortraitEffectsMatteDeliverySupported && self.isPortraitEnable
+                        if self.isPortraitSegmentEnable {
+                            self.photoOutput.enabledSemanticSegmentationMatteTypes = self.photoOutput.availableSemanticSegmentationMatteTypes
+                        }
                     }
                     
                     self.session.commitConfiguration()
