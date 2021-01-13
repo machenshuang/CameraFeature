@@ -177,6 +177,16 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
         if let depthData = photo.depthData, let orientation = photo.metadata[String(kCGImagePropertyOrientation)] as? UInt32, let exifOrientation = CGImagePropertyOrientation(rawValue: orientation) {
             let depthData = depthData.applyingExifOrientation(exifOrientation)
             guard let perceptualColorSpace = CGColorSpace(name: CGColorSpace.sRGB) else { return }
+            //depthData = depthData.converting(toDepthDataType: kCVPixelFormatType_DepthFloat16)
+            if depthData.depthDataType == kCVPixelFormatType_DepthFloat16 {
+                debugPrint("depthData.depthDataType is kCVPixelFormatType_DepthFloat16")
+            } else if depthData.depthDataType == kCVPixelFormatType_DepthFloat32 {
+                debugPrint("depthData.depthDataType is kCVPixelFormatType_DepthFloat32")
+            } else if depthData.depthDataType == kCVPixelFormatType_DisparityFloat16 {
+                debugPrint("depthData.depthDataType is kCVPixelFormatType_DisparityFloat16")
+            } else {
+                debugPrint("depthData.depthDataType is kCVPixelFormatType_DisparityFloat32")
+            }
             
             // Create a new CIImage from the matte's underlying CVPixelBuffer.
             let ciImage = CIImage( cvImageBuffer: depthData.depthDataMap,

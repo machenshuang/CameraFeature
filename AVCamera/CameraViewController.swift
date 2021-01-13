@@ -377,7 +377,8 @@ class CameraViewController: UIViewController {
     
     private func getDepthCaptureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = self.depthVideoDeviceDiscoverySession.devices
-        return devices.first { $0.position == position}
+        guard let device = devices.first(where: { $0.position == position} ) else { return nil }
+        return device
     }
 
 }
