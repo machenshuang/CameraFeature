@@ -62,6 +62,6 @@ enum CameraFeatures: String {
     case bracketed = "分级捕获"
     case livePhoto = "Live Photo"
     case thumbnail = "缩略图"
-    case sceneMonitoring = "场景监控（包含flash和静态图像稳定）"
+    case sceneMonitoring = "Flash场景监控"
 }
 
